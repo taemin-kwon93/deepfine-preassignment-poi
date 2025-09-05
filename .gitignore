@@ -1,1 +1,54 @@
+# Environment
 .env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage / Reports
+coverage/
+.nyc_output/
+
+# Build outputs / Bundles
+dist/
+build/
+out/
+tmp/
+temp/
+*.tmp
+
+# Caches
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Framework outputs (keep if unused)
+.next/
+.nuxt/
+.svelte-kit/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editors / IDEs
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo
+
+# Local overrides
+*.local
+
+# Optional: config files with secrets (uncomment if applicable)
+# config.json
