@@ -1,3 +1,6 @@
+// Load environment variables early
+try { require('dotenv').config(); } catch (_) {}
+
 let createError = require('http-errors');
 let express = require('express');
 let cookieParser = require('cookie-parser');
