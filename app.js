@@ -46,8 +46,11 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-http.createServer(app).listen('3535', () => {
-  console.log(`✅  Server is running at port 3535.`);
-});
+const PORT = process.env.PORT || 3535;
+if (process.env.NODE_ENV !== 'test') {
+  http.createServer(app).listen(PORT, () => {
+    console.log(`✅  Server is running at port ${PORT}.`);
+  });
+}
 
 module.exports = app;
