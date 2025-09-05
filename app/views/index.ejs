@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko" class="overflow-hidden">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>TmapCodingTest</title>
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script src="/getScript"></script>
+    </head>
+
+    <body class="overflow-hidden">
+
+    <!-- map, list , root -->
+    <section class="relative h-dvh w-dvh bg-black/20">
+        <div class="size-full object-cover" id="map_div"></div>
+    </section>
+
+    <div class="fixed top-0">
+        <div class="p-1 bg-white flex items-center gap-2">
+            <label class="input w-full">
+                <input type="search" required placeholder="Search"/>
+            </label>
+
+            <button type="button" class="flex-none size-10 cursor-pointer">
+                <svg class="w-full h-[2rem] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g
+                            stroke-linejoin="round"
+                            stroke-linecap="round"
+                            stroke-width="2.5"
+                            fill="none"
+                            stroke="currentColor"
+                    >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </g>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div
+            class="fixed bottom-10 left-10 z-[5] grid grid-rows-2 gap-10 peer-aria-[hidden=false]:bottom-[58dvh]"
+            data-location="box"
+            id="btnBox"
+    >
+        <button
+                type="button"
+                class="grid size-15 place-content-center rounded-full border border-[#ccc] bg-[#fff] shadow-md"
+                aria-label="refresh"
+                title="refresh"
+        >
+            <span>refresh</span>
+        </button>
+        <button
+                type="button"
+                class="grid size-15 place-content-center rounded-full border border-[#ccc] bg-[#fff] shadow-md"
+                aria-label="import"
+                title="import"
+        >
+            <span>import</span>
+        </button>
+    </div>
+    </body>
+
+</html>

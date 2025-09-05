@@ -1,0 +1,12 @@
+{
+  "db_server": {
+    "host": "localhost"
+  , "user": "pgadmin"
+  , "password": "1234"
+  , "port": "5432"
+  , "database": "codingTest"
+  , "idleTimeoutMillis": 10000
+  , "connectionTimeoutMillis": 30000
+  , "ssl": false
+  }
+}
