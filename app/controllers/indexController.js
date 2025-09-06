@@ -1,2 +1,2 @@
-const defaultMapper = 'index';
-const indexModel = require('../models/indexModel');
+const _defaultMapper = 'index';
+const _indexModel = require('../models/indexModel');

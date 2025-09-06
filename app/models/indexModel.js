@@ -1,10 +1,8 @@
-let baseModel = require('./baseModel');
+const baseModel = require('./baseModel');
 
 const INDEX = {
-    id: null
-    , name: null
+  id: null,
+  name: null,
 };
 
-exports.newModel = (opt) => {
-    return baseModel.extend(INDEX, opt);
-};
+exports.newModel = (opt) => baseModel.extend(INDEX, opt);

@@ -8,25 +8,24 @@
  * @returns {{resultYn: 'Y'|'N', statusCode: *, statusMessage: (*|string), errorCode: *, errorMessage: (*|string), resultData: (*|{}), resultCnt: *}}
  */
 exports.getReturnMessage = ({ isErr = false, code = 200, message = '성공', resultData = null, resultCnt = 0 }) => {
-	if (isErr) {
-		return {
-			statusCode: code
-			, statusMessage: message
-			, errorCode: code
-			, errorMessage: message
-			, resultData: resultData || {}
-			, resultCnt: resultCnt || 0
-		}
-	} else {
-		return {
-			 statusCode: code
-			, statusMessage: message
-			, errorCode: null
-			, errorMessage: ''
-			, resultData
-			, resultCnt
-		}
-	}
+  if (isErr) {
+    return {
+      statusCode: code,
+      statusMessage: message,
+      errorCode: code,
+      errorMessage: message,
+      resultData: resultData || {},
+      resultCnt: resultCnt || 0,
+    };
+  }
+  return {
+    statusCode: code,
+    statusMessage: message,
+    errorCode: null,
+    errorMessage: '',
+    resultData,
+    resultCnt,
+  };
 };
 
 /**
@@ -36,26 +35,28 @@ exports.getReturnMessage = ({ isErr = false, code = 200, message = '성공', res
  * @return json
  */
 exports.snakeToCamel = (json) => {
-
-	if (Array.isArray(json)) {
-		for (let data of json) {
-			for(let key in data) {
-				const oldKey = data[key];
-				const newKey = key.replace(/_[a-z]/g, letter => letter.toUpperCase().replace("_", ""));
-
-				delete data[key];
-				data[newKey] = oldKey;
-			}
-		}
-	} else {
-		for(let key in json) {
-			const oldKey = json[key];
-			const newKey = key.replace(/_[a-z]/g, letter => letter.toUpperCase().replace("_", ""));
-
-			delete json[key];
-			json[newKey] = oldKey;
-		}
-	}
-
-	return json;
+  if (Array.isArray(json)) {
+    for (const data of json) {
+      // eslint-disable-next-line guard-for-in
+      for (const key in data) {
+        const oldVal = data[key];
+        const newKey = key.replace(/_[a-z]/g, (letter) => letter.toUpperCase().replace('_', ''));
+        if (newKey !== key) {
+          delete data[key];
+          data[newKey] = oldVal;
+        }
+      }
+    }
+  } else if (json && typeof json === 'object') {
+    // eslint-disable-next-line guard-for-in
+    for (const key in json) {
+      const oldVal = json[key];
+      const newKey = key.replace(/_[a-z]/g, (letter) => letter.toUpperCase().replace('_', ''));
+      if (newKey !== key) {
+        delete json[key];
+        json[newKey] = oldVal;
+      }
+    }
+  }
+  return json;
 };
