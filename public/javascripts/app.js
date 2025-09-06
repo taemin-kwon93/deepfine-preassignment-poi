@@ -157,9 +157,9 @@
     if (state.suggest.box) state.suggest.box.innerHTML = '';
   }
 
-  function updateSuggestions(query) {
-    if (!state.suggest.box) return;
-    const q = normalize(query);
+  function updateSuggestions(input) {
+    if (!state.suggest.box || !input) return;
+    const q = normalize(input.value);
     if (!q) { hideSuggestions(); return; }
     const scored = state.pois
       .map(p => ({ p, s: scoreName(p?.name || '', q) }))
@@ -168,15 +168,16 @@
       .slice(0, 10);
     state.suggest.items = scored.map(x => x.p);
     state.suggest.active = scored.length ? 0 : -1;
-    renderSuggestions(q);
+    renderSuggestions(input);
   }
 
-  function renderSuggestions(q) {
+  function renderSuggestions(input) {
     const box = state.suggest.box;
     if (!box) return;
     box.innerHTML = '';
     if (!state.suggest.items.length) { hideSuggestions(); return; }
     box.style.display = 'block';
+    const q = normalize(input?.value || '');
     state.suggest.items.forEach((p, idx) => {
       const item = document.createElement('div');
       item.style.padding = '8px 10px';
@@ -204,14 +205,12 @@
       item.addEventListener('mousedown', (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
-        const input = document.querySelector('input[type="search"]');
         selectSuggestion(idx, input);
       });
       // Fallback for environments where click is preferred
       item.addEventListener('click', (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
-        const input = document.querySelector('input[type="search"]');
         selectSuggestion(idx, input);
       });
       box.appendChild(item);
@@ -238,7 +237,7 @@
 
     // Suggestions: init and wire interactions
     ensureSuggestBox(input);
-    const onInput = debounce(() => updateSuggestions(input.value), 200);
+    const onInput = debounce(() => updateSuggestions(input), 200);
     input?.addEventListener('input', onInput);
     input?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
