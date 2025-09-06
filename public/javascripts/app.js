@@ -8,8 +8,6 @@
     uiBound: false,
   };
 
-  const $ = (sel) => document.querySelector(sel);
-
   function initMap() {
     // Default center Seoul
     state.map = new Tmapv2.Map('map_div', {
@@ -21,17 +19,17 @@
   }
 
   function setUserMarker(lat, lon) {
-      const pos = new Tmapv2.LatLng(lat, lon);
-      if (!state.userMarker) {
-          state.userMarker = new Tmapv2.Marker({
-              position: pos,
-              icon: '/images/pin-red.svg',
-              map: state.map,
-          });
-          state.map.setCenter(pos);
-      } else {
-          state.userMarker.setPosition(pos);
-      }
+    const pos = new Tmapv2.LatLng(lat, lon);
+    if (!state.userMarker) {
+      state.userMarker = new Tmapv2.Marker({
+        position: pos,
+        icon: '/images/pin-red.svg',
+        map: state.map,
+      });
+      state.map.setCenter(pos);
+    } else {
+      state.userMarker.setPosition(pos);
+    }
   }
 
   function watchLocation() {
@@ -74,46 +72,46 @@
   }
 
   function bindUI() {
-      if (state.uiBound) return;
-      const buttons = document.querySelectorAll('[data-location="box"] button');
-      const [btnRefresh, btnImport] = buttons;
-      // Refresh
-      btnRefresh?.addEventListener('click', () => {
-        if (state.map) {
-          loadPois();
+    if (state.uiBound) return;
+    const buttons = document.querySelectorAll('[data-location="box"] button');
+    const [btnRefresh, btnImport] = buttons;
+    // Refresh
+    btnRefresh?.addEventListener('click', () => {
+      if (state.map) {
+        loadPois();
+      } else {
+        console.warn('Map not initialized yet');
+      }
+    });
+    // Import
+    let fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.xlsx,.xls';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+
+    btnImport?.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', async () => {
+      if (!fileInput.files || fileInput.files.length === 0) return;
+      const file = fileInput.files[0];
+      const fd = new FormData();
+      fd.append('file', file);
+      try {
+        const res = await fetch('/poi/import', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (res.ok) {
+          alert(`Imported ${data.resultCnt || 0} rows`);
         } else {
-          console.warn('Map not initialized yet');
+          alert(data.errorMessage || 'Import failed');
         }
-      });
-      // Import
-      let fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = '.xlsx,.xls';
-      fileInput.style.display = 'none';
-      document.body.appendChild(fileInput);
-
-      btnImport?.addEventListener('click', () => fileInput.click());
-
-      fileInput.addEventListener('change', async () => {
-          if (!fileInput.files || fileInput.files.length === 0) return;
-          const file = fileInput.files[0];
-          const fd = new FormData();
-          fd.append('file', file);
-          try {
-              const res = await fetch('/poi/import', { method: 'POST', body: fd });
-              const data = await res.json();
-              if (res.ok) {
-                  alert(`Imported ${data.resultCnt || 0} rows`);
-              } else {
-                  alert(data.errorMessage || 'Import failed');
-              }
-          } catch (e) {
-              alert('Import failed');
-          } finally {
-              fileInput.value = '';
-          }
-      });
-      state.uiBound = true;
+      } catch (e) {
+        alert('Import failed');
+      } finally {
+        fileInput.value = '';
+      }
+    });
+    state.uiBound = true;
   }
   document.addEventListener('DOMContentLoaded', () => {
     bindUI();

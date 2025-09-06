@@ -4,7 +4,8 @@ dist/
 build/
 out/
 tmp/
-public/
+public/images/
+public/stylesheets/
 src/
 **/*.min.js
 **/vendor/**
