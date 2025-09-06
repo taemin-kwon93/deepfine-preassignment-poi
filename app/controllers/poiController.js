@@ -1,18 +1,12 @@
 const fs = require('fs');
 const xlsx = require('xlsx');
 
-// List POIs with optional query filters
+// List all POIs
 exports.list = (req, res) => {
-  const p = {};
-  if (typeof req.query.q === 'string' && req.query.q.trim()) p.q = req.query.q.trim();
-  const limRaw = Number(req.query.limit);
-  const lim = Number.isFinite(limRaw) ? limRaw : null;
-  if (lim !== null) p.limit = Math.max(1, Math.min(100, Math.floor(lim)));
-
   global.psql.select(
     'poi',
     'selectAll',
-    p,
+    {},
     (rows) => {
       res.json(global.funcCmmn.getReturnMessage({ resultData: rows, resultCnt: rows.length }));
     },
@@ -22,7 +16,7 @@ exports.list = (req, res) => {
   );
 };
 
-// Import POIs from uploaded Excel file
+// Import POIs from an uploaded Excel file
 exports.importExcel = async (req, res) => {
   let filepath;
   try {
@@ -30,7 +24,7 @@ exports.importExcel = async (req, res) => {
       return res.status(400).json(global.funcCmmn.getReturnMessage({ isErr: true, code: 400, message: 'No file uploaded' }));
     }
 
-    // Use single transaction for all DB changes
+    // Use a single transaction for all DB changes
     const client = await global.psql.getConnection();
     const begin = async () => client.query('BEGIN');
     const commit = async () => client.query('COMMIT');

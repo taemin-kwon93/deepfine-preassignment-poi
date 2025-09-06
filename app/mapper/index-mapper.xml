@@ -2,18 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="poi">
-    <select id="selectAll" parameterType="map" resultType="map">
-        SELECT *
-        FROM poi
-        <where>
-            <if test="q != null and q != ''">
-                AND lower(name) like '%' || lower(#{q}) || '%'
-            </if>
-        </where>
-        ORDER BY name
-        <if test="limit != null">
-            LIMIT #{limit}
-        </if>
+    <select id="selectAll" resultType="map">
+        SELECT * FROM poi
     </select>
 
     <insert id="insertPoiBulk" parameterType="map">
