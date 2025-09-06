@@ -6,11 +6,17 @@ const fs = require('fs');
 const mapper = require('mybatis-mapper');
 
 // create mapper
-fs.readdir(path.join(ROOT, 'app', 'mapper'), (err, mapperList) => {
-	for (var file of mapperList) {
-		mapper.createMapper([path.join(ROOT, 'app', 'mapper', file)]);
+try {
+	const dir = path.join(ROOT, 'app', 'mapper');
+	const mapperList = fs.readdirSync(dir);
+	for (const file of mapperList) {
+		mapper.createMapper([path.join(dir, file)]);
 	}
-});
+} catch (e) {
+	// eslint-disable-next-line no-console
+	console.error('Mapper load failed:', e.message);
+}
+
 
 var format = {language: 'sql', indent: '  '};
 

@@ -2,5 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="poi">
+    <select id="selectAll" resultType="map">
+        SELECT * FROM poi
+    </select>
+
+    <insert id="insertPoiBulk" parameterType="map">
+        INSERT INTO poi (name, latitude, longitude)
+        VALUES
+        <foreach collection="list" item="it" separator=",">
+            (#{it.name}, #{it.latitude}, #{it.longitude})
+        </foreach>
+    </insert>
+
+    <update id="truncate" parameterType="map">
+        TRUNCATE TABLE poi;
+    </update>
 
 </mapper>
