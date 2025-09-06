@@ -16,6 +16,26 @@ exports.list = (req, res) => {
   );
 };
 
+// Search POIs by name
+exports.search = (req, res) => {
+  const query = req.query.q || '';
+  if (!query.trim()) {
+    return res.json(global.funcCmmn.getReturnMessage({ resultData: [], resultCnt: 0 }));
+  }
+
+  global.psql.select(
+    'poi',
+    'searchByName',
+    { query: query.trim() },
+    (rows) => {
+      res.json(global.funcCmmn.getReturnMessage({ resultData: rows, resultCnt: rows.length }));
+    },
+    (err) => {
+      res.status(500).json(global.funcCmmn.getReturnMessage({ isErr: true, code: 500, message: err.message }));
+    }
+  );
+};
+
 // Import POIs from uploaded Excel file
 exports.importExcel = async (req, res) => {
   let filepath;

@@ -6,6 +6,12 @@
         SELECT * FROM poi
     </select>
 
+    <select id="searchByName" parameterType="map" resultType="map">
+        SELECT * FROM poi
+        WHERE name ILIKE CONCAT('%', #{query}, '%')
+        ORDER BY name
+    </select>
+
     <insert id="insertPoiBulk" parameterType="map">
         INSERT INTO poi (name, latitude, longitude)
         VALUES

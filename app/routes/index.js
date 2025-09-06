@@ -60,6 +60,7 @@ router.get('/getScript', function(req, res) {
 });
 
 router.get('/poi', poiController.list);
+router.get('/poi/search', poiController.search);
 router.post('/poi/import', upload.single('file'), poiController.importExcel);
 
 module.exports = router;

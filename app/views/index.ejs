@@ -22,11 +22,13 @@
 
     <div class="fixed top-0">
         <div class="p-1 bg-white flex items-center gap-2">
-            <label class="input w-full">
-                <input type="search" required placeholder="Search"/>
+            <label class="input w-full relative">
+                <input type="search" required placeholder="Search" id="searchInput"/>
+                <div id="searchResults" class="absolute top-full left-0 right-0 bg-white border border-gray-200 shadow-lg max-h-60 overflow-y-auto z-50 hidden">
+                </div>
             </label>
 
-            <button type="button" class="flex-none size-10 cursor-pointer">
+            <button type="button" class="flex-none size-10 cursor-pointer" id="searchButton">
                 <svg class="w-full h-[2rem] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g
                             stroke-linejoin="round"
