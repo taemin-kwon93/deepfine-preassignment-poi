@@ -15,7 +15,7 @@ jest.mock('../app/modules/db.psql.js', () => {
     __control: control,
     select: (_mapper, _id, _param, ok, err) => {
       if (control.shouldError) return err && err(new Error('mock select failure'));
-      return ok && ok(out);
+      return ok && ok(control.rows);
     },
   };
 });
