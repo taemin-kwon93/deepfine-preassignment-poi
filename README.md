@@ -5,10 +5,9 @@ Express + PostgreSQL 기반의 POI(관심지점) 관리/표시 애플리케이�
 엑셀 업로드로 POI를 일괄 등록하고, 지도(Tmap) 위에 마커로 표시합니다.   
 Docker Compose로 웹/DB를 함께 실행할 수 있습니다.  
 
-`/getScript` 라우트로 Tmap SDK를 안전하게 프록시합니다.
-
 ## 주요 기능
 - POI 목록 API: `GET /poi`
+- `/getScript` 라우트로 Tmap SDK를 안전하게 불러옵니다.
 - 엑셀 업로드를 통한 POI 일괄 등록: `POST /poi/import`
 - Tmap SDK 프록시: `GET /getScript` (페이지에 API Key 노출 방지)
 - 지도 페이지: `GET /index` (검색, 새로고침, 업로드 UI)
@@ -116,3 +115,18 @@ Jest + Supertest
 - `/getScript`가 500: `.env`에 `TMAP_API_KEY` 설정
 - 스키마가 적용되지 않음: DB 볼륨을 이미 사용 중이면 init 스크립트가 재실행되지 않음 → `docker compose down -v`로 초기화하거나 수동 적용
 - 포트 충돌: `.env`의 `PORT`/`PGPORT` 변경 후 재기동
+
+------------------------------------------------------------------------------------------------------------------------
+## 참고 · 프로젝트 관리
+
+본 과제는 GitHub Projects의 **칸반 보드**로 전 과정과 산출물을 **관리**했습니다.
+
+- **보드 링크**: [Project 칸반보드](https://github.com/users/taemin-kwon93/projects/3)
+- **추적 원칙**
+  - 모든 작업은 **Issue 1건**으로 시작 → 브랜치 생성(`feat/...-#이슈번호`) → **PR**로 연결
+  - PR 본문에 `Closes #<이슈번호>`를 사용해 **자동 연결/자동 종료**
+- **워크플로우**
+  - Backlog → In Progress → Review → Done
+  - 각 카드에는 **목표, 수용 기준(AC), 테스트 방법, 관련 링크**를 포함
+- **완료 기준(DoD)**
+  - 테스트 통과(Jest/Supertest), 린트 통과
