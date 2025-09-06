@@ -3,8 +3,23 @@ const fs = require('fs');
 const path = require('path');
 const mapper = require('mybatis-mapper');
 
-// Pool: use globals populated by app.js
-const pool = new Pool((global && global.CONFIG) ? global.CONFIG.db_server : {});
+// Pool: prefer PG* env vars if present, else fall back to config.json
+const envCfgPresent = !!(process && process.env && (
+  process.env.PGHOST || process.env.PGDATABASE || process.env.PGUSER
+));
+const cfgFromEnv = envCfgPresent ? {
+  host: process.env.PGHOST,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT ? Number(process.env.PGPORT) : undefined,
+  database: process.env.PGDATABASE,
+  ssl: /^true$/i.test(String(process.env.PGSSL || '')) || false,
+  idleTimeoutMillis: process.env.PG_IDLE_TIMEOUT ? Number(process.env.PG_IDLE_TIMEOUT) : undefined,
+  connectionTimeoutMillis: process.env.PG_CONN_TIMEOUT ? Number(process.env.PG_CONN_TIMEOUT) : undefined,
+} : null;
+
+// Pool: use globals populated by app.js when env not provided
+const pool = new Pool(cfgFromEnv || ((global && global.CONFIG) ? global.CONFIG.db_server : {}));
 
 // Create mappers from app/mapper
 try {
