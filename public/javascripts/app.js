@@ -45,10 +45,46 @@
       { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
     );
   }
+
+  function clearPoiMarkers() {
+    for (const m of state.poiMarkers) {
+      try { m.setMap(null); } catch (_) {}
+    }
+    state.poiMarkers = [];
+  }
+
+  // Load POIs from server and display on map
+  async function loadPois() {
+    const res = await fetch('/poi');
+    const data = await res.json();
+    const list = data.resultData || [];
+    state.pois = list;
+    clearPoiMarkers();
+    for (const p of list) {
+      if (p.latitude == null || p.longitude == null) continue;
+      const marker = new Tmapv2.Marker({
+        position: new Tmapv2.LatLng(p.latitude, p.longitude),
+        icon: '/images/pin-location.svg',
+        map: state.map,
+        title: p.name || '',
+      });
+      marker.poi = p;
+      state.poiMarkers.push(marker);
+    }
+  }
+
   function bindUI() {
       if (state.uiBound) return;
       const buttons = document.querySelectorAll('[data-location="box"] button');
-      const [, btnImport] = buttons;
+      const [btnRefresh, btnImport] = buttons;
+      // Refresh
+      btnRefresh?.addEventListener('click', () => {
+        if (state.map) {
+          loadPois();
+        } else {
+          console.warn('Map not initialized yet');
+        }
+      });
       // Import
       let fileInput = document.createElement('input');
       fileInput.type = 'file';
@@ -89,6 +125,7 @@
         clearInterval(check);
         initMap();
         watchLocation();
+        loadPois();
       }
     }, 50);
   });

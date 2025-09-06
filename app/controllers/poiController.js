@@ -1,6 +1,21 @@
 const fs = require('fs');
 const xlsx = require('xlsx');
 
+// List all POIs
+exports.list = (req, res) => {
+  global.psql.select(
+    'poi',
+    'selectAll',
+    {},
+    (rows) => {
+      res.json(global.funcCmmn.getReturnMessage({ resultData: rows, resultCnt: rows.length }));
+    },
+    (err) => {
+      res.status(500).json(global.funcCmmn.getReturnMessage({ isErr: true, code: 500, message: err.message }));
+    }
+  );
+};
+
 // Import POIs from uploaded Excel file
 exports.importExcel = async (req, res) => {
   let filepath;
