@@ -1,12 +1,18 @@
 const fs = require('fs');
 const xlsx = require('xlsx');
 
-// List all POIs
+// List POIs with optional query filters
 exports.list = (req, res) => {
+  const p = {};
+  if (typeof req.query.q === 'string' && req.query.q.trim()) p.q = req.query.q.trim();
+  const limRaw = Number(req.query.limit);
+  const lim = Number.isFinite(limRaw) ? limRaw : null;
+  if (lim !== null) p.limit = Math.max(1, Math.min(100, Math.floor(lim)));
+
   global.psql.select(
     'poi',
     'selectAll',
-    {},
+    p,
     (rows) => {
       res.json(global.funcCmmn.getReturnMessage({ resultData: rows, resultCnt: rows.length }));
     },
