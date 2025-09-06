@@ -1,8 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const https = require('https');
+const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
 const indexController = require('../controllers/indexController');
+const poiController = require('../controllers/poiController');
+
+// File upload (store in tmp folder). Be robust if globals are not yet set.
+const rootDir = (global && global.ROOT) ? global.ROOT : path.join(__dirname, '..', '..');
+const tmpDir = path.join(rootDir, 'tmp');
+try { fs.mkdirSync(tmpDir, { recursive: true }); } catch (_) {}
+const upload = multer({ dest: tmpDir });
+
 
 /* GET home page. */
 router.get('/', (req, res) => res.redirect('/index'));
@@ -49,5 +59,7 @@ router.get('/getScript', function(req, res) {
   });
   reqOut.end();
 });
+
+router.post('/poi/import', upload.single('file'), poiController.importExcel);
 
 module.exports = router;
