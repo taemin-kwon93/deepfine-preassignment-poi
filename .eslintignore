@@ -1,0 +1,11 @@
+node_modules/
+coverage/
+dist/
+build/
+out/
+tmp/
+public/
+src/
+**/*.min.js
+**/vendor/**
+app/views/

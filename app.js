@@ -1,5 +1,5 @@
 // Load environment variables early
-try { require('dotenv').config(); } catch (_) {}
+try { require('dotenv').config(); } catch (e) { void e; }
 
 let createError = require('http-errors');
 let express = require('express');
@@ -7,7 +7,8 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 
 let indexRouter = require('./app/routes/index');
-const http = require("http");
+const http = require('http');
+const path = require('path');
 
 let app = express();
 
@@ -36,7 +37,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res, _next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -47,7 +48,8 @@ app.use(function(err, req, res, next) {
 });
 
 const PORT = process.env.PORT || 3535;
-if (process.env.NODE_ENV !== 'test') {
+// Do not start a server when required by tests or other modules
+if (require.main === module && process.env.NODE_ENV !== 'test') {
   http.createServer(app).listen(PORT, () => {
     console.log(`✅  Server is running at port ${PORT}.`);
   });

@@ -4,19 +4,18 @@ const https = require('https');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
-const indexController = require('../controllers/indexController');
 const poiController = require('../controllers/poiController');
 
 // File upload (store in tmp folder). Be robust if globals are not yet set.
 const rootDir = (global && global.ROOT) ? global.ROOT : path.join(__dirname, '..', '..');
 const tmpDir = path.join(rootDir, 'tmp');
-try { fs.mkdirSync(tmpDir, { recursive: true }); } catch (_) {}
+try { fs.mkdirSync(tmpDir, { recursive: true }); } catch (e) { void e; }
 const upload = multer({ dest: tmpDir });
 
 
 /* GET home page. */
 router.get('/', (req, res) => res.redirect('/index'));
-router.get('/index', function(req, res, next) {
+router.get('/index', function(req, res) {
   res.render('index', { title: 'Express' });
 });
 
