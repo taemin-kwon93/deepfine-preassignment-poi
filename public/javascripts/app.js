@@ -8,8 +8,6 @@
     uiBound: false,
   };
 
-  const _$ = (sel) => document.querySelector(sel);
-
   function initMap() {
     // Default center Seoul
     state.map = new Tmapv2.Map('map_div', {
