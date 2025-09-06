@@ -4,6 +4,7 @@
 Express + PostgreSQL 기반의 POI(관심지점) 관리/표시 애플리케이션입니다.   
 엑셀 업로드로 POI를 일괄 등록하고, 지도(Tmap) 위에 마커로 표시합니다.   
 Docker Compose로 웹/DB를 함께 실행할 수 있습니다.  
+사전과제 시연 영상 [링크](https://youtu.be/tiFwvtKM9cA)
 
 ## 주요 기능
 - POI 목록 API: `GET /poi`
