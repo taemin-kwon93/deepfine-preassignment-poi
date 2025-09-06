@@ -71,10 +71,36 @@
     }
   }
 
+  function findPoiByName(query) {
+    if (!query) return null;
+    const q = query.trim().toLowerCase();
+    return state.pois.find((p) => (p.name || '').toLowerCase().includes(q));
+  }
+
+  function centerOnPoi(poi) {
+    if (!poi) return;
+    const pos = new Tmapv2.LatLng(poi.latitude, poi.longitude);
+    state.map.setCenter(pos);
+  }
+
+  function performSearch(inputEl) {
+    if (!inputEl) return;
+    const poi = findPoiByName(inputEl.value);
+    if (poi) centerOnPoi(poi);
+  }
+
   function bindUI() {
     if (state.uiBound) return;
+    const input = document.querySelector('input[type="search"]');
+    const btnSearch = input?.parentElement?.parentElement?.querySelector('button');
     const buttons = document.querySelectorAll('[data-location="box"] button');
     const [btnRefresh, btnImport] = buttons;
+
+    input?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') performSearch(input);
+    });
+    btnSearch?.addEventListener('click', () => performSearch(input));
+
     // Refresh
     btnRefresh?.addEventListener('click', () => {
       if (state.map) {
