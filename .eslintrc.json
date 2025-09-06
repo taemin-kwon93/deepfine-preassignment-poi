@@ -24,7 +24,14 @@
       "rules": {
         "no-undef": "off"
       }
+    },
+    {
+      "files": ["public/**/*.js"],
+      "env": { "browser": true, "node": false },
+      "globals": { "Tmapv2": "readonly" },
+      "rules": {
+        "no-empty": ["warn", { "allowEmptyCatch": true }]
+      }
     }
   ]
 }
-
