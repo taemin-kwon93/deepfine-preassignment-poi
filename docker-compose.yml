@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: poi-db
+    environment:
+      - POSTGRES_USER=${PGUSER:-postgres}
+      - POSTGRES_PASSWORD=${PGPASSWORD:-postgres}
+      - POSTGRES_DB=${PGDATABASE:-codingtest}
+    ports:
+      - "${PGPORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    container_name: poi-web
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=stage
+      - PORT=${PORT:-3535}
+      # PG connection via env (db.psql.js prefers env over config.json)
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=${PGDATABASE:-codingtest}
+      - PGUSER=${PGUSER:-postgres}
+      - PGPASSWORD=${PGPASSWORD:-postgres}
+      # TMAP
+      - TMAP_API_KEY=${TMAP_API_KEY}
+      - TMAP_VERSION=${TMAP_VERSION:-1}
+    ports:
+      - "${PORT:-3535}:3535"
+    # For live-edit in dev, uncomment the next two lines
+    # volumes:
+    #   - ./:/usr/src/app
+
+volumes:
+  pgdata:
+
