@@ -9,13 +9,23 @@ jest.mock('../app/modules/db.psql.js', () => {
     rows: [
       { id: 1, name: 'Cafe A', latitude: 37.1, longitude: 127.1 },
       { id: 2, name: 'Park B', latitude: 37.2, longitude: 127.2 },
+      { id: 3, name: 'Cafe Alpha', latitude: 37.3, longitude: 127.3 },
     ],
+    lastParam: null,
   };
   return {
     __control: control,
-    select: (_mapper, _id, _param, ok, err) => {
+    select: (_mapper, _id, param, ok, err) => {
+      control.lastParam = param;
       if (control.shouldError) return err && err(new Error('mock select failure'));
-      return ok && ok(control.rows);
+      let out = control.rows.slice();
+      if (param && param.q) {
+        const q = String(param.q).toLowerCase();
+        out = out.filter(r => String(r.name || '').toLowerCase().includes(q));
+      }
+      // no coordinate-based filtering in current scope
+      if (param && param.limit != null) out = out.slice(0, param.limit);
+      return ok && ok(out);
     },
   };
 });
@@ -39,6 +49,12 @@ describe('GET /poi', () => {
     expect(res.body.resultCnt).toBe(2);
     // basic field check
     expect(res.body.resultData[0]).toMatchObject({ name: 'Cafe A', latitude: 37.1, longitude: 127.1 });
+  });
+
+  test('200 → filters by q and limit', async () => {
+    const res = await request(app).get('/poi?q=cafe&limit=1').expect(200);
+    expect(res.body.resultCnt).toBe(1);
+    expect(res.body.resultData[0].name.toLowerCase()).toContain('cafe');
   });
 
   test('500 → handles DB error path', async () => {
